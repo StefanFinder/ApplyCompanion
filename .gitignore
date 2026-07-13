@@ -1,0 +1,20 @@
+# Dependencies
+app/node_modules/
+
+# Next.js build output
+app/.next/
+app/out/
+
+# Local env (contains API key)
+app/.env.local
+app/.env*.local
+
+# Local data (personal resume + job files)
+app/data/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
