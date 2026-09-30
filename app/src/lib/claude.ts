@@ -68,13 +68,21 @@ async function ask(systemPrompt: string, userPrompt: string): Promise<string> {
   return block.text.trim();
 }
 
+function isCaliforniaJob(jobDescription: string, company: string): boolean {
+  const text = `${jobDescription} ${company}`.toLowerCase();
+  return /\bcalifornia\b/.test(text) || /\b[a-z\s]+,\s*ca\b/.test(text);
+}
+
 export async function generateDocuments(
   resume: Resume,
   jobDescription: string,
   company: string,
   jobTitle: string
 ): Promise<JobDocuments> {
-  const resumeText = resumeToText(resume);
+  const effectiveResume = isCaliforniaJob(jobDescription, company)
+    ? { ...resume, personal: { ...resume.personal, location: 'Santa Clara, CA 95051' } }
+    : resume;
+  const resumeText = resumeToText(effectiveResume);
 
   const context = `
 MASTER RESUME:
@@ -142,9 +150,11 @@ PROJECTS
 ━━━ ONE-PAGE RULES ━━━
 - SUMMARY: 2–3 sentences, ≤ 50 words total
 - EXPERIENCE: copy bullets from the master resume AS-IS — preserve the original wording, length, and detail exactly; you may only add or bold a keyword from the job description if it fits naturally; NEVER shorten, summarize, or merge bullets; only drop a bullet if it has zero relevance to this specific job; include all bullets from relevant roles
+- SECURAM EXCEPTION: for the SECURAM experience only, you MAY substitute technology names to match the job description (e.g. replace "Golang" with "TypeScript" or "JavaScript" if the JD requires those languages); keep the rest of the bullet wording unchanged; only substitute if the candidate plausibly used that technology in the same context (same type of work — backend services, APIs, scripting, etc.); never substitute a technology that is fundamentally different in nature (e.g. do not replace a database with a language)
 - SKILLS: include ALL skill categories from the master resume, each on its own • line
 - PROJECTS: include all projects; copy bullets AS-IS from the master resume; do not shorten or merge them
 - Total word count: 500–620 words (one dense page)
+- FILL REMAINING SPACE: after copying all master resume bullets, if the total word count is below 500 words, add extra ♦ bullets to the most relevant PROFESSIONAL EXPERIENCE role(s) to fill the page; these extra bullets must describe work that is plausible and consistent with the candidate's actual role and company context (same team, same codebase, same type of work) AND directly relevant to the job description; do not invent new projects, employers, or technologies the candidate has not used; keep each extra bullet ≤ 20 words and bold key technologies
 - Output ONLY the resume text — no preamble, no commentary, no code fences
 - Use ONLY information from the master resume — never fabricate`,
       `${context}
@@ -183,11 +193,20 @@ Write a brief hiring manager message. Output just the message text, no subject l
     // Why this company
     ask(
       `You are a career coach helping candidates answer "Why do you want to work at [Company]?" authentically.
-Write a genuine, specific 2-3 paragraph response (under 200 words) that:
-- Shows real interest in the company's mission, products, or culture (inferred from the job description)
-- Connects the candidate's background and values to the company's work
-- Avoids generic statements like "you're an industry leader" or "great culture"
-- Sounds authentic and thought-through`,
+The candidate is a natural storyteller — they connect through personal narrative, not just skills and tasks.
+Write a genuine, story-driven 3 paragraph response (150–220 words) structured like this:
+
+Paragraph 1 — Personal story hook: open with a specific moment, realization, or experience from the candidate's background (drawn from their resume — e.g. a project they built, a problem they solved, something they discovered working at a past role) that connects emotionally to what this company does or the problem it solves. Make it feel like a real memory, not a resume line.
+
+Paragraph 2 — Connection to the company: bridge that story to this specific company's mission, product, or focus (inferred from the job description). Show you understand what they're building and why it matters. Be specific — no generic "industry leader" language.
+
+Paragraph 3 — Forward-looking fit: explain how joining this team is the natural next chapter of that story. Tie in 1–2 relevant technical strengths from the resume that map to the JD. Close with genuine enthusiasm, not flattery.
+
+Rules:
+- Sound like a real person reflecting, not a cover letter
+- Never use: "passionate", "excited opportunity", "leverage", "robust", "cutting-edge"
+- Draw the personal story only from what's in the resume — never fabricate
+- Keep it warm, direct, and human`,
       `${context}
 
 Write a "Why this company?" response. Output just the response text.`

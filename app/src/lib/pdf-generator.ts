@@ -164,40 +164,40 @@ function buildResumeHtml(content: string): string {
     width: 8.5in;
     font-family: 'Times New Roman', Times, serif;
     font-size: 10.5pt;
-    line-height: 1.3;
+    line-height: 1.18;
     color: #000;
     background: #fff;
   }
 
   .page {
-    padding: 0.55in 0.75in;
+    padding: 0.45in 0.65in;
   }
 
   /* ── Header ── */
   .resume-name {
     text-align: center;
-    font-size: 18pt;
+    font-size: 17pt;
     font-weight: bold;
-    margin-bottom: 2pt;
+    margin-bottom: 1pt;
   }
 
   .resume-contact {
     text-align: center;
     font-size: 9.5pt;
-    margin-bottom: 5pt;
+    margin-bottom: 3pt;
   }
 
   /* ── Section headers ── */
   .section-header {
-    font-size: 11.5pt;
+    font-size: 11pt;
     font-weight: bold;
     border-bottom: 1pt solid #000;
-    padding-bottom: 1pt;
-    margin-top: 7pt;
-    margin-bottom: 3pt;
+    padding-bottom: 0pt;
+    margin-top: 5pt;
+    margin-bottom: 2pt;
   }
 
-  .gap { height: 2pt; }
+  .gap { height: 0pt; }
 
   /* ── Bullets ── */
   .bullet-two-col,
@@ -205,7 +205,7 @@ function buildResumeHtml(content: string): string {
     display: flex;
     align-items: baseline;
     gap: 3pt;
-    margin-bottom: 1pt;
+    margin-bottom: 0pt;
   }
 
   .main-bullet-marker {
@@ -227,13 +227,13 @@ function buildResumeHtml(content: string): string {
     justify-content: space-between;
     align-items: baseline;
     padding-left: 12pt;
-    margin-bottom: 1pt;
+    margin-bottom: 0pt;
   }
 
   /* ── Continuation line (degree name) ── */
   .indent-line {
     padding-left: 12pt;
-    margin-bottom: 1pt;
+    margin-bottom: 0pt;
   }
 
   /* ── ♦ sub-bullet ── */
@@ -242,18 +242,18 @@ function buildResumeHtml(content: string): string {
     align-items: baseline;
     gap: 3pt;
     padding-left: 20pt;
-    margin-bottom: 1pt;
+    margin-bottom: 0pt;
   }
 
   .sub-marker {
     flex-shrink: 0;
     font-size: 6.5pt;
-    padding-top: 2pt;
+    padding-top: 1pt;
   }
 
   /* ── Summary paragraph ── */
   .para {
-    margin-bottom: 2pt;
+    margin-bottom: 1pt;
   }
 
   @page { size: Letter; margin: 0; }
