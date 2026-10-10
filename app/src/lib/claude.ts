@@ -151,7 +151,13 @@ PROJECTS
 - SUMMARY: 2–3 sentences, ≤ 50 words total
 - EXPERIENCE: copy bullets from the master resume AS-IS — preserve the original wording, length, and detail exactly; you may only add or bold a keyword from the job description if it fits naturally; NEVER shorten, summarize, or merge bullets; only drop a bullet if it has zero relevance to this specific job; include all bullets from relevant roles
 - SECURAM EXCEPTION: for the SECURAM experience only, you MAY substitute technology names to match the job description (e.g. replace "Golang" with "TypeScript" or "JavaScript" if the JD requires those languages); keep the rest of the bullet wording unchanged; only substitute if the candidate plausibly used that technology in the same context (same type of work — backend services, APIs, scripting, etc.); never substitute a technology that is fundamentally different in nature (e.g. do not replace a database with a language)
-- SKILLS: include ALL skill categories from the master resume, each on its own • line
+- SKILLS: tailor the skills section to the job description using these rules:
+  1. Keep ALL skill categories from the master resume — do not drop any category
+  2. Reorder categories so the most relevant ones to the JD appear first
+  3. Within each category, reorder skills so JD-matching skills appear first
+  4. You may remove individual skills from a category only if they are completely unrelated to the JD AND removing them makes room for a JD-required skill the candidate demonstrably has (evidenced in their experience or projects)
+  5. You may add a skill to an existing category if: it appears in the JD requirements/qualifications AND there is clear evidence the candidate has used it (mentioned in experience or project bullets) — never add skills not found anywhere in the master resume
+  6. Never fabricate a skill category or skill not grounded in the master resume
 - PROJECTS: include all projects; copy bullets AS-IS from the master resume; do not shorten or merge them
 - Total word count: 500–620 words (one dense page)
 - FILL REMAINING SPACE: after copying all master resume bullets, if the total word count is below 500 words, add extra ♦ bullets to the most relevant PROFESSIONAL EXPERIENCE role(s) to fill the page; these extra bullets must describe work that is plausible and consistent with the candidate's actual role and company context (same team, same codebase, same type of work) AND directly relevant to the job description; do not invent new projects, employers, or technologies the candidate has not used; keep each extra bullet ≤ 20 words and bold key technologies
