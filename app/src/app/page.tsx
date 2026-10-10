@@ -37,10 +37,14 @@ function timeAgo(iso: string): string {
   return `${days}d ago`;
 }
 
+const PAGE_SIZE_OPTIONS = [5, 10, 25, 50];
+
 export default function DashboardPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
 
   const loadJobs = useCallback(() => {
     fetch('/api/jobs')
@@ -59,6 +63,9 @@ export default function DashboardPage() {
     setJobs(prev => prev.filter(j => j.id !== id));
     setDeletingId(null);
   };
+
+  const totalPages = Math.max(1, Math.ceil(jobs.length / pageSize));
+  const pagedJobs = jobs.slice((page - 1) * pageSize, page * pageSize);
 
   const stats = {
     total: jobs.length,
@@ -92,7 +99,21 @@ export default function DashboardPage() {
 
       {/* Jobs list */}
       <div>
-        <h2 className="text-base font-semibold text-slate-900 mb-3">Recent Applications</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-semibold text-slate-900">Recent Applications</h2>
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <span>Rows per page:</span>
+            <select
+              value={pageSize}
+              onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
+              className="border border-slate-200 rounded-md px-2 py-1 text-xs text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-400"
+            >
+              {PAGE_SIZE_OPTIONS.map(n => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+        </div>
 
         {!loaded ? (
           <div className="flex items-center justify-center py-16">
@@ -110,8 +131,9 @@ export default function DashboardPage() {
             <p className="text-xs text-slate-400 mt-1">Use the Chrome extension to capture a job description.</p>
           </div>
         ) : (
+          <>
           <div className="space-y-2">
-            {jobs.map(job => (
+            {pagedJobs.map(job => (
               <div key={job.id} className="group relative flex items-center gap-4 bg-white rounded-xl border border-slate-200 px-5 py-4 hover:border-indigo-300 hover:shadow-sm transition-all">
                 {/* Main link area */}
                 <Link href={`/jobs/${job.id}`} className="absolute inset-0 rounded-xl" aria-label={`Open ${job.title}`} />
@@ -175,6 +197,37 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mt-4 text-xs text-slate-500">
+              <span>
+                {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, jobs.length)} of {jobs.length}
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setPage(1)}
+                  disabled={page === 1}
+                  className="px-2 py-1 rounded-md border border-slate-200 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
+                >«</button>
+                <button
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="px-2 py-1 rounded-md border border-slate-200 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
+                >‹</button>
+                <span className="px-3 py-1">Page {page} of {totalPages}</span>
+                <button
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="px-2 py-1 rounded-md border border-slate-200 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
+                >›</button>
+                <button
+                  onClick={() => setPage(totalPages)}
+                  disabled={page === totalPages}
+                  className="px-2 py-1 rounded-md border border-slate-200 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
+                >»</button>
+              </div>
+            </div>
+          )}
+          </>
         )}
       </div>
     </div>
